@@ -4,10 +4,16 @@ const fs = require("fs");
 
 const prices = require('./prices');
 
-app = express();
+const DB = require('./db-connect');
+const db = new DB();
 
+app = express();
+/*
 cron.schedule("* * * * *", function() {
     prices();
 });
+*/
 
-  app.listen(3128);
+db.connect();
+
+app.listen(3128);

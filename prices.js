@@ -7,4 +7,4 @@ const prices = () =>{
     .then(json => console.log(json));
 }
 
-module.exports= prices;
+module.exports = prices;
