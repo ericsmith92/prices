@@ -1,3 +1,4 @@
+/*
 const fetch = require('node-fetch');
 
 const prices = () =>{
@@ -6,5 +7,13 @@ const prices = () =>{
     .then(json => console.log(json))
     .then(json => console.log(json));
 }
+*/
 
-module.exports = prices;
+const yahooFinance = require('yahoo-finance');
+
+const price = async () => {
+    const result = await yahooFinance.quote('VUN.TO', ['price']);
+    return [result['price'].symbol, result['price'].regularMarketPrice];
+}
+
+module.exports = price;
