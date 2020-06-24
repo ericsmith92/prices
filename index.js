@@ -15,6 +15,11 @@ cron.schedule("* * * * *", function() {
 */
 
 db.connect();
+
+app.get('/', (req, res) => {
+  res.sendFile(__dirname + '/views/index.html');
+});
+
 const stockInfo = price().then(result => {
   const sql = `INSERT INTO equities (name, price) VALUES ('${result[0]}', ${result[1]})`;
   db.insert(sql);
