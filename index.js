@@ -1,32 +1,37 @@
 const cron = require("node-cron");
 const express = require("express");
 const fs = require("fs");
+const bodyParser = require('body-parser');
+
+app = express();
+app.use('/library', express.static(__dirname + '/library'));
+app.use(express.urlencoded({ extended: true }));
+app.use(bodyParser.json())
 
 const price = require('./prices');
 
 const DB = require('./db-connect');
 const db = new DB();
 
-app = express();
-/*
-cron.schedule("* * * * *", function() {
-    prices();
-});
-*/
-
-db.connect();
-
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/views/index.html');
 });
 
-const stockInfo = price().then(result => {
-  const sql = `INSERT INTO equities (name, price) VALUES ('${result[0]}', ${result[1]})`;
-  db.insert(sql);
-})
-.catch(err => {
-  console.log(err);
+app.get('/query', (req, res) => {
+  db.query(`SELECT * FROM equities`)
+    .then(rows => res.json({data : rows}))
+    //.then(rows => db.close());
 });
 
+app.post('/insert', (req, res) => {
+  price('VUN.TO').then(result => {
+    const sql = `INSERT INTO equities (name, price) VALUES ('${result[0]}', ${result[1]})`;
+    db.query(sql)
+    .then(rows => res.json({data : rows}))
+    //.then(rows => db.close())
+    .catch(err => console.log(err));
+  })
+  .catch(err => console.log(err));
+});
 
 app.listen(3128);

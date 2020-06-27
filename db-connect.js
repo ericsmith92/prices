@@ -1,31 +1,35 @@
 const mysql = require('mysql');
 require('dotenv').config();
 
-const con = mysql.createConnection({
+const config = {
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
   password: process.env.DB_PASS,
   database: process.env.DB_NAME
-});
+}
 
 class DB {
-  constructor(con) {
-    this.con = con;
+  constructor() {
+      this.config = config;
+      this.connection = mysql.createConnection( config );
   }
-
-  connect(){
-    con.connect(function(err) {
-      if (err) throw err;
-      console.log("Connected!");
-    });
+  query( sql, args ) {
+      return new Promise( ( resolve, reject ) => {
+          this.connection.query( sql, args, ( err, rows ) => {
+              if ( err )
+                  return reject( err );
+              resolve( rows );
+          } );
+      } );
   }
-
-  insert(sql){
-    con.query(sql, function (err, result, fields) {
-      if (err) throw err;
-      console.log("query complete");
-      console.log(result);
-    });
+  close() {
+      return new Promise( ( resolve, reject ) => {
+          this.connection.end( err => {
+              if ( err )
+                  return reject( err );
+              resolve();
+          } );
+      } );
   }
 }
 
