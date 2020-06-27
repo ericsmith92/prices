@@ -28,11 +28,11 @@ window.onload = () => {
     }
 
     const buildTable = ({ data }) => {
+        root.querySelectorAll('*').forEach(n => n.remove());
         const table = document.createElement('table');
         const tableHead = buildTableHead(data[0]);
         const tableBody = buildTableBody(data);
 
-        console.log(tableBody);
 
         table.insertAdjacentHTML('afterbegin', tableHead);
         table.insertAdjacentHTML('beforeend', tableBody);
