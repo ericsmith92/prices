@@ -9,7 +9,6 @@ app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.json())
 
 const price = require('./prices');
-
 const DB = require('./db-connect');
 const db = new DB();
 
@@ -20,7 +19,6 @@ app.get('/', (req, res) => {
 app.get('/query', (req, res) => {
   db.query(`SELECT * FROM equities`)
     .then(rows => res.json({data : rows}))
-    //.then(rows => db.close());
 });
 
 app.post('/insert', (req, res) => {
@@ -28,7 +26,6 @@ app.post('/insert', (req, res) => {
     const sql = `INSERT INTO equities (name, price) VALUES ('${result[0]}', ${result[1]})`;
     db.query(sql)
     .then(rows => res.json({data : rows}))
-    //.then(rows => db.close())
     .catch(err => console.log(err));
   })
   .catch(err => console.log(err));
