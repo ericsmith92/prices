@@ -3,6 +3,8 @@ window.onload = () => {
     const btnInsert = document.querySelector('.insertDb');
     const root = document.querySelector('.root');
 
+    const form = document.forms[0];
+
     const queryDb = () => {
         fetch('/query')
             .then(res => res.json())
@@ -21,7 +23,9 @@ window.onload = () => {
             },
             redirect: 'follow', 
             referrerPolicy: 'no-referrer', 
-            body: JSON.stringify(data) 
+            body: JSON.stringify({
+                symbol: data
+            }) 
           });
         
         return response.json();
@@ -52,7 +56,18 @@ window.onload = () => {
         const bodyTds = arr.map(row => `<tr><td>${row.name}</td><td>${row.price}</td><td>${row.id}</td></tr>`);
         return bodyTds.join(''); 
     }
+
+    const getStock = (e) => {
+        e.preventDefault();
+
+        const inputVal = form.elements['symbol'].value
+
+        if(inputVal.trim()){
+            insertDb(inputVal);
+        }
+    }
     
     btnSelect.addEventListener('click', queryDb);
     btnInsert.addEventListener('click', insertDb);
+    form.addEventListener('submit', getStock);
 }

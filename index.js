@@ -22,7 +22,11 @@ app.get('/query', (req, res) => {
 });
 
 app.post('/insert', (req, res) => {
-  price('VUN.TO').then(result => {
+  const symbol = req.body.symbol.toUpperCase();
+
+  console.log(symbol);
+
+  price(symbol).then(result => {
     const sql = `INSERT INTO equities (name, price) VALUES ('${result[0]}', ${result[1]})`;
     db.query(sql)
     .then(rows => res.json({data : rows}))
