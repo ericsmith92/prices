@@ -1,6 +1,5 @@
 window.onload = () => {
     const btnSelect = document.querySelector('.queryDb');
-    const btnInsert = document.querySelector('.insertDb');
     const root = document.querySelector('.root');
 
     const form = document.forms[0];
@@ -10,25 +9,6 @@ window.onload = () => {
             .then(res => res.json())
             .then(json => buildTable(json))
             .catch(err => console.log(err));
-    }
-
-    const insertDb = async (data = {}) => {
-        const response = await fetch('/insert', {
-            method: 'POST', 
-            mode: 'cors', 
-            cache: 'no-cache', 
-            credentials: 'same-origin', 
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            redirect: 'follow', 
-            referrerPolicy: 'no-referrer', 
-            body: JSON.stringify({
-                symbol: data
-            }) 
-          });
-        
-        return response.json();
     }
 
     const buildTable = ({ data }) => {
@@ -66,8 +46,26 @@ window.onload = () => {
             insertDb(inputVal);
         }
     }
+
+    const insertDb = async (data = {}) => {
+        const response = await fetch('/insert', {
+            method: 'POST', 
+            mode: 'cors', 
+            cache: 'no-cache', 
+            credentials: 'same-origin', 
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            redirect: 'follow', 
+            referrerPolicy: 'no-referrer', 
+            body: JSON.stringify({
+                symbol: data
+            }) 
+          });
+        
+        return response.json();
+    }
     
     btnSelect.addEventListener('click', queryDb);
-    btnInsert.addEventListener('click', insertDb);
     form.addEventListener('submit', getStock);
 }

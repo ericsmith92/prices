@@ -1,6 +1,4 @@
-const cron = require("node-cron");
 const express = require("express");
-const fs = require("fs");
 const bodyParser = require('body-parser');
 
 app = express();
@@ -8,7 +6,7 @@ app.use('/library', express.static(__dirname + '/library'));
 app.use(express.urlencoded({ extended: true }));
 app.use(bodyParser.json())
 
-const price = require('./prices');
+const yahooFinance = require('./apis/yahoo-finance/yahooFinance');
 const DB = require('./db-connect');
 const db = new DB();
 
@@ -26,7 +24,7 @@ app.post('/insert', (req, res) => {
 
   console.log(symbol);
 
-  price(symbol).then(result => {
+  yahooFinance(symbol).then(result => {
     const sql = `INSERT INTO equities (name, price) VALUES ('${result[0]}', ${result[1]})`;
     db.query(sql)
     .then(rows => res.json({data : rows}))
