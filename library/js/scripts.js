@@ -48,7 +48,7 @@ window.onload = () => {
     }
 
     const insertDb = async (data = {}) => {
-        const response = await fetch('/insert', {
+        await fetch('/insert', {
             method: 'POST', 
             mode: 'cors', 
             cache: 'no-cache', 
@@ -63,7 +63,8 @@ window.onload = () => {
             }) 
           });
         
-        return response.json();
+          queryDb();
+        //return response.json();
     }
     
     btnSelect.addEventListener('click', queryDb);
